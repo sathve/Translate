@@ -1,49 +1,30 @@
 package org.springframework.boot.spring_boot_starter_web.service.impl;
 
+import org.json.JSONArray;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.spring_boot_starter_web.client.GoogleTranslateClient;
+import org.springframework.boot.spring_boot_starter_web.models.TranslationResponse;
 import org.springframework.boot.spring_boot_starter_web.service.inf.TranslateInf;
 import org.springframework.stereotype.Service;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import org.json.JSONArray;
 
 @Service
-public class TranslateImpl implements TranslateInf{
+public class TranslateImpl implements TranslateInf {
 
-	public String translate(String fromLanguage, String toLanguage, String sentence) throws Exception { 
-		String url = "https://translate.googleapis.com/translate_a/single?" +
-				"client=gtx&" +
-				"sl=" + fromLanguage +
-				"&tl=" + toLanguage +
-				"&dt=t&q=" + URLEncoder.encode(sentence, "UTF-8");
+    @Autowired
+    GoogleTranslateClient googleTranslateClient;
 
-		URL obj = new URL(url);
-		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-		con.setRequestProperty("User-Agent", "Mozilla/5.0");
+    public TranslationResponse translate(String fromLanguage, String toLanguage, String sentence) throws Exception {
+        String response = googleTranslateClient.translate(fromLanguage, toLanguage, sentence);
+        return new TranslationResponse(sentence, parseResult(response));
 
-		BufferedReader in = new BufferedReader(
-				new InputStreamReader(con.getInputStream()));
-		String inputLine;
-		StringBuffer response = new StringBuffer();
+    }
 
-		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
-		}
-		
-		in.close();
-		return parseResult(response.toString());
+    private String parseResult(String inputJson) throws Exception {
+        JSONArray jsonArray = new JSONArray(inputJson);
+        JSONArray jsonArray2 = (JSONArray) jsonArray.get(0);
+        JSONArray jsonArray3 = (JSONArray) jsonArray2.get(0);
 
-	}
-
-	private String parseResult(String inputJson) throws Exception
-	{
-		JSONArray jsonArray = new JSONArray(inputJson);
-		JSONArray jsonArray2 = (JSONArray) jsonArray.get(0);
-		JSONArray jsonArray3 = (JSONArray) jsonArray2.get(0);
-
-		return jsonArray3.get(0).toString();
-	}
+        return jsonArray3.get(0).toString();
+    }
 
 }
