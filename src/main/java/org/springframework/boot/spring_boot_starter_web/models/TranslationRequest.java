@@ -5,6 +5,10 @@ import java.io.Serializable;
 public class TranslationRequest implements Serializable {
     private String text;
 
+    public TranslationRequest() {
+        super();
+    }
+    
     public TranslationRequest(String text) {
         this.text = text;
     }
