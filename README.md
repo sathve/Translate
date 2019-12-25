@@ -17,4 +17,17 @@ API end points
     "text": "How are you?"
   }
   ```
-
+  
+  Response format:
+  ```
+  {
+    "originalText": "How are you?",
+    "translatedText": "क्या हाल है?"
+  }
+  ```
+  
+  Steps to run the application:
+  
+  Run TranslateApplication.java as a java application.
+  Your Spring boot Application will now be running on localhost:8080
+  
