@@ -18,9 +18,16 @@ public class TranslateController {
     TranslateImpl translateService;
 
     @PostMapping(value = "/translate/{fromLanguage}/{toLanguage}", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<TranslationResponse> getRoomsAvailable(@PathVariable("fromLanguage") final String fromLanguage,
+    public ResponseEntity<TranslationResponse> translate(@PathVariable("fromLanguage") final String fromLanguage,
                                                                  @PathVariable("toLanguage") final String toLanguage,
                                                                  @RequestBody final TranslationRequest sentence) throws Exception {
         return new ResponseEntity<TranslationResponse>(this.translateService.translate(fromLanguage, toLanguage, sentence.getText()), HttpStatus.OK);
+    }
+    
+    @PostMapping(value = "/translate/html/{fromLanguage}/{toLanguage}", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<TranslationResponse> translateHtml(@PathVariable("fromLanguage") final String fromLanguage,
+    															@PathVariable("toLanguage") final String toLanguage,
+    															@RequestBody final TranslationRequest htmlString) throws Exception {
+    	return  new ResponseEntity<TranslationResponse>(this.translateService.translateHtml(fromLanguage, toLanguage, htmlString.getText()), HttpStatus.OK);
     }
 }
